@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UE5 Class Hierarchy Reference</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #0c0c0e;
+  --bg2: #141418;
+  --bg3: #1c1c22;
+  --bg4: #24242c;
+  --text: #e2e0d8;
+  --text2: #9c9a92;
+  --text3: #6c6a64;
+  --border: #2a2a32;
+  --accent: #7c6ff7;
+  --accent2: #9d93f8;
+  --actor: #3b8bdd;
+  --actor-bg: #0e1e30;
+  --actor-border: #1a3a5c;
+  --comp: #1d9e75;
+  --comp-bg: #0a2a1e;
+  --comp-border: #14503a;
+  --ctrl: #d4537e;
+  --ctrl-bg: #2e1220;
+  --ctrl-border: #5c2240;
+  --info: #d85a30;
+  --info-bg: #2a1408;
+  --info-border: #5c2810;
+  --ui: #ef9f27;
+  --ui-bg: #2a1e08;
+  --ui-border: #5c4010;
+  --data: #639922;
+  --data-bg: #162008;
+  --data-border: #304810;
+  --sub: #888780;
+  --sub-bg: #1a1a1e;
+  --sub-border: #3a3a40;
+  --ai: #e24b4a;
+  --ai-bg: #2a1010;
+  --ai-border: #5c2020;
+  --root: #7c6ff7;
+  --root-bg: #181630;
+  --root-border: #302a5c;
+  --phys: #5dcaa5;
+  --phys-bg: #0a2820;
+  --phys-border: #185040;
+  --anim: #ed93b1;
+  --anim-bg: #2a1420;
+  --anim-border: #5c2840;
+  --net: #85b7eb;
+  --net-bg: #0e1e30;
+  --net-border: #1a3a5c;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); color: var(--text); }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  padding: 32px 32px 0;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+header h1 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+header h1 span { color: var(--accent); }
+
+header p {
+  color: var(--text2);
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 32px;
+}
+.toolbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+.search-box input {
+  width: 100%;
+  padding: 8px 12px 8px 36px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  outline: none;
+  transition: border-color .2s;
+}
+.search-box input:focus { border-color: var(--accent); }
+.search-box::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--text3);
+  border-radius: 50%;
+}
+.search-box::after {
+  content: '';
+  position: absolute;
+  left: 24px;
+  top: 60%;
+  width: 2px;
+  height: 6px;
+  background: var(--text3);
+  transform: rotate(-45deg);
+  transform-origin: top;
+}
+
+.filter-pills {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.pill {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all .15s;
+  user-select: none;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+.pill.active { opacity: 1; }
+.pill:not(.active) { opacity: 0.35; }
+.pill:hover { opacity: 0.8; }
+
+.btn-group {
+  display: flex;
+  gap: 4px;
+}
+.btn {
+  padding: 6px 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text2);
+  font-size: 11px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  cursor: pointer;
+  transition: all .15s;
+}
+.btn:hover { background: var(--bg4); color: var(--text); border-color: var(--text3); }
+
+.counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  white-space: nowrap;
+}
+
+main {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 16px 32px 64px;
+  flex: 1;
+}
+
+.tree { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+.tree ul { list-style: none; padding-left: 24px; }
+.tree > ul { padding-left: 0; }
+
+.tree li { position: relative; }
+.tree li::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+.tree li::after {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 18px;
+  width: 14px;
+  height: 1px;
+  background: var(--border);
+}
+.tree > ul > li::before,
+.tree > ul > li::after { display: none; }
+.tree li:last-child::before { bottom: calc(100% - 18px); }
+
+.node-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  margin: 1px 0;
+  border-radius: 6px;
+  transition: background .12s;
+  cursor: default;
+  max-width: 100%;
+}
+.node-row:hover { background: var(--bg3); }
+.node-row.expandable { cursor: pointer; }
+
+.caret {
+  width: 0; height: 0;
+  border-left: 5px solid var(--text3);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  transition: transform .15s;
+  flex-shrink: 0;
+}
+.caret.open { transform: rotate(90deg); }
+.caret.hidden { visibility: hidden; }
+
+.cls-name {
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.tag {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 1px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.desc {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  color: var(--text3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cat-actor .cls-name { color: var(--actor); }
+.cat-actor .tag { background: var(--actor-bg); color: var(--actor); border: 1px solid var(--actor-border); }
+.cat-comp .cls-name { color: var(--comp); }
+.cat-comp .tag { background: var(--comp-bg); color: var(--comp); border: 1px solid var(--comp-border); }
+.cat-ctrl .cls-name { color: var(--ctrl); }
+.cat-ctrl .tag { background: var(--ctrl-bg); color: var(--ctrl); border: 1px solid var(--ctrl-border); }
+.cat-info .cls-name { color: var(--info); }
+.cat-info .tag { background: var(--info-bg); color: var(--info); border: 1px solid var(--info-border); }
+.cat-ui .cls-name { color: var(--ui); }
+.cat-ui .tag { background: var(--ui-bg); color: var(--ui); border: 1px solid var(--ui-border); }
+.cat-data .cls-name { color: var(--data); }
+.cat-data .tag { background: var(--data-bg); color: var(--data); border: 1px solid var(--data-border); }
+.cat-sub .cls-name { color: var(--sub); }
+.cat-sub .tag { background: var(--sub-bg); color: var(--sub); border: 1px solid var(--sub-border); }
+.cat-ai .cls-name { color: var(--ai); }
+.cat-ai .tag { background: var(--ai-bg); color: var(--ai); border: 1px solid var(--ai-border); }
+.cat-root .cls-name { color: var(--root); }
+.cat-root .tag { background: var(--root-bg); color: var(--root); border: 1px solid var(--root-border); }
+.cat-phys .cls-name { color: var(--phys); }
+.cat-phys .tag { background: var(--phys-bg); color: var(--phys); border: 1px solid var(--phys-border); }
+.cat-anim .cls-name { color: var(--anim); }
+.cat-anim .tag { background: var(--anim-bg); color: var(--anim); border: 1px solid var(--anim-border); }
+.cat-net .cls-name { color: var(--net); }
+.cat-net .tag { background: var(--net-bg); color: var(--net); border: 1px solid var(--net-border); }
+
+.highlight { background: #7c6ff720; border-radius: 4px; }
+
+.plugin-badge {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: var(--bg4);
+  color: var(--text3);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.tree li.hidden-by-filter { display: none; }
+.tree li.hidden-by-search { display: none; }
+
+footer {
+  padding: 24px 32px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text3);
+  border-top: 1px solid var(--border);
+}
+footer a { color: var(--accent2); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+@media (max-width: 700px) {
+  header, main, .toolbar { padding-left: 16px; padding-right: 16px; }
+  .desc { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span>UE5</span> Class Hierarchy Reference</h1>
+  <p>Every inheritable base class in Unreal Engine 5 &mdash; core engine + major plugins. Click to expand. Search to find.</p>
+</header>
+
+<div class="toolbar">
+<div class="toolbar-inner">
+  <div class="search-box">
+    <input type="text" id="search" placeholder="Search classes..." autocomplete="off">
+  </div>
+  <div class="filter-pills" id="filters"></div>
+  <div class="btn-group">
+    <button class="btn" onclick="toggleAll(true)">Expand all</button>
+    <button class="btn" onclick="toggleAll(false)">Collapse all</button>
+  </div>
+  <div class="counter" id="counter"></div>
+</div>
+</div>
+
+<main>
+<div class="tree" id="tree"></div>
+</main>
+
+<footer>
+  Full API reference: <a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/API/ClassHierarchy" target="_blank">dev.epicgames.com/documentation/.../API/ClassHierarchy</a>
+  &nbsp;|&nbsp; In-editor: Window &rarr; Developer Tools &rarr; Class Viewer
+</footer>
+
+<script>
+const CATS = {
+  root:  { label:'Root',       color:'root' },
+  actor: { label:'Actor',      color:'actor' },
+  comp:  { label:'Component',  color:'comp' },
+  ctrl:  { label:'Controller', color:'ctrl' },
+  info:  { label:'Info/Rules', color:'info' },
+  ui:    { label:'UI',         color:'ui' },
+  data:  { label:'Data/Util',  color:'data' },
+  sub:   { label:'Subsystem',  color:'sub' },
+  ai:    { label:'AI',         color:'ai' },
+  phys:  { label:'Physics',    color:'phys' },
+  anim:  { label:'Animation',  color:'anim' },
+  net:   { label:'Network',    color:'net' },
+};
+
+const T = (n,cat,d,plug,ch) => ({n,cat,d,plug:plug||null,ch:ch||[]});
+
+const tree = T('UObject','root','Base of everything: GC, reflection, CDO, serialization',null,[
+
+  T('AActor','actor','Can exist in world, has components, replicates',null,[
+    T('APawn','actor','Possessable by controller, receives input',null,[
+      T('ACharacter','actor','Pawn + CharacterMovementComponent (walk/jump/swim/fly/crouch)',null,[
+        T('APaperCharacter','actor','2D sprite-based character','Paper2D'),
+      ]),
+      T('ADefaultPawn','actor','Simple floating pawn with collision',null,[
+        T('ASpectatorPawn','actor','Camera-only spectator'),
+      ]),
+      T('AWheeledVehiclePawn','actor','Wheeled vehicle with Chaos physics','ChaosVehicles'),
+    ]),
+
+    T('AController','ctrl','Abstract brain that possesses a pawn',null,[
+      T('APlayerController','ctrl','Human input, camera, HUD, viewport management',null,[
+        T('ACommonPlayerController','ctrl','CommonUI player controller','CommonUI'),
+      ]),
+      T('AAIController','ai','BT host, EQS, pathfinding, perception'),
+    ]),
+
+    T('AInfo','info','No visual representation — rules and state only',null,[
+      T('AGameModeBase','info','Spawn rules, default classes, win/lose logic',null,[
+        T('AGameMode','info','+ match state machine (multiplayer)'),
+      ]),
+      T('AGameStateBase','info','Replicated game-wide state',null,[
+        T('AGameState','info','+ match state'),
+      ]),
+      T('APlayerState','info','Per-player replicated state (name, score, etc.)'),
+      T('AWorldSettings','info','Per-level settings (gravity, kill-Z, game mode override)'),
+      T('AGameSession','info','Online session / matchmaking management'),
+      T('AGameNetworkManager','net','Network bandwidth & lag compensation'),
+    ]),
+
+    T('AHUD','ui','Canvas-based HUD drawing (legacy, pre-UMG)'),
+    T('ALevelScriptActor','actor','Per-level Blueprint script'),
+    T('APlayerStart','actor','Player spawn point marker'),
+    T('APlayerCameraManager','actor','Per-player camera management & blending'),
+    T('ACameraActor','actor','Standalone camera placed in world'),
+    T('AStaticMeshActor','actor','Placed static mesh instance'),
+    T('ASkeletalMeshActor','actor','Placed skeletal mesh instance'),
+
+    T('ABrush','actor','CSG constructive solid geometry',null,[
+      T('AVolume','actor','Invisible region with gameplay purpose',null,[
+        T('ATriggerVolume','actor','Generic overlap trigger'),
+        T('ABlockingVolume','actor','Invisible collision wall'),
+        T('AKillZVolume','actor','Kills actors entering'),
+        T('APainCausingVolume','actor','Applies damage over time'),
+        T('APhysicsVolume','phys','Overrides physics (gravity, friction)'),
+        T('APostProcessVolume','actor','Post-process effect zone'),
+        T('AAudioVolume','actor','Audio reverb/attenuation zone'),
+        T('ANavMeshBoundsVolume','ai','Defines navmesh generation area'),
+        T('ALightmassImportanceVolume','actor','Lightmass GI priority zone'),
+        T('APrecomputedVisibilityVolume','actor','Precomputed occlusion zone'),
+        T('ACullDistanceVolume','actor','Per-actor LOD distance override'),
+      ]),
+    ]),
+
+    T('ALight','actor','Base light actor',null,[
+      T('APointLight','actor','Omnidirectional light'),
+      T('ASpotLight','actor','Cone light'),
+      T('ADirectionalLight','actor','Infinite sun/moon light'),
+      T('ARectLight','actor','Rectangular area light'),
+      T('ASkyLight','actor','Ambient cubemap / sky light'),
+    ]),
+
+    T('ADecalActor','actor','Projected decal material'),
+    T('ANiagaraActor','actor','Niagara particle system','Niagara'),
+    T('AEmitter','actor','Legacy Cascade particle system'),
+    T('ATargetPoint','actor','Arbitrary world marker / waypoint'),
+    T('ANavigationData','ai','Navigation mesh data holder'),
+    T('ARecastNavMesh','ai','Recast navmesh implementation'),
+    T('ACableActor','actor','Physics-simulated cable','CableComponent'),
+    T('AExponentialHeightFog','actor','Distance/height fog'),
+    T('ASkyAtmosphere','actor','Physically-based sky'),
+    T('AVolumetricCloud','actor','Volumetric cloud layer'),
+    T('ATextRenderActor','actor','3D text in world'),
+    T('ANote','actor','Editor-only text note'),
+    T('AReflectionCapture','actor','Reflection probe base',null,[
+      T('ASphereReflectionCapture','actor','Sphere reflection probe'),
+      T('ABoxReflectionCapture','actor','Box reflection probe'),
+    ]),
+    T('APlanarReflection','actor','Planar reflection capture'),
+    T('ARuntimeVirtualTextureVolume','actor','RVT streaming volume'),
+
+    T('AEditorUtilityActor','actor','Blutility actor for editor scripting','EditorScripting'),
+    T('AMediaPlayer','actor','Media framework playback actor','MediaFramework'),
+  ]),
+
+  T('UActorComponent','comp','Logic-only component, no transform',null,[
+    T('USceneComponent','comp','Has transform, can attach to hierarchy',null,[
+      T('UPrimitiveComponent','comp','+ rendering + collision',null,[
+        T('UMeshComponent','comp','Renderable mesh base',null,[
+          T('UStaticMeshComponent','comp','Static geometry rendering'),
+          T('USkeletalMeshComponent','comp','Animated skeleton rendering',null,[
+            T('UPoseableMeshComponent','comp','Manually poseable bones'),
+          ]),
+          T('UProceduralMeshComponent','comp','Runtime-generated mesh','ProceduralMeshComponent'),
+          T('UInstancedStaticMeshComponent','comp','GPU instanced rendering',null,[
+            T('UHierarchicalInstancedStaticMeshComponent','comp','+ LOD culling per instance'),
+          ]),
+          T('USplineMeshComponent','comp','Mesh deformed along spline'),
+          T('UCableComponent','comp','Simulated cable mesh','CableComponent'),
+          T('UGeometryCollectionComponent','phys','Chaos destruction mesh','ChaosDestruction'),
+        ]),
+        T('UShapeComponent','comp','Collision primitive base',null,[
+          T('UBoxComponent','comp','Box collider'),
+          T('USphereComponent','comp','Sphere collider'),
+          T('UCapsuleComponent','comp','Capsule collider'),
+        ]),
+        T('UTextRenderComponent','comp','3D text rendering'),
+        T('UNiagaraComponent','comp','Niagara FX instance','Niagara'),
+        T('UParticleSystemComponent','comp','Legacy Cascade FX'),
+        T('UDecalComponent','comp','Projected decal'),
+        T('USplineComponent','comp','Spline curve with mesh/collision'),
+        T('UWidgetComponent','ui','UMG widget in world space'),
+        T('UBrushComponent','comp','CSG brush geometry'),
+        T('ULandscapeComponent','comp','Terrain chunk'),
+        T('UFoliageInstancedStaticMeshComponent','comp','Foliage instances'),
+      ]),
+      T('UCameraComponent','comp','Camera lens settings'),
+      T('USpringArmComponent','comp','Camera boom with collision'),
+      T('UAudioComponent','comp','3D positioned audio source'),
+      T('USceneCaptureComponent','comp','Render-to-texture capture',null,[
+        T('USceneCaptureComponent2D','comp','2D render target capture'),
+        T('USceneCaptureComponentCube','comp','Cubemap capture'),
+      ]),
+      T('ULightComponent','comp','Light source base',null,[
+        T('UPointLightComponent','comp','Point light'),
+        T('USpotLightComponent','comp','Spot light'),
+        T('UDirectionalLightComponent','comp','Directional light'),
+        T('URectLightComponent','comp','Rect area light'),
+      ]),
+      T('UArrowComponent','comp','Editor direction indicator'),
+      T('UBillboardComponent','comp','Editor sprite billboard'),
+      T('UChildActorComponent','comp','Spawns and manages a child actor'),
+      T('UAIPerceptionStimuliSourceComponent','ai','AI perception stimulus','AIModule'),
+      T('UPhysicsConstraintComponent','phys','Physics joint/constraint'),
+      T('UPhysicsHandleComponent','phys','Grab & move physics objects'),
+      T('URadialForceComponent','phys','Radial physics force'),
+    ]),
+
+    T('UMovementComponent','comp','Abstract movement base',null,[
+      T('UPawnMovementComponent','comp','Pawn-aware movement base',null,[
+        T('UCharacterMovementComponent','comp','Full bipedal movement (walk/jump/swim/fly/crouch)'),
+        T('UFloatingPawnMovement','comp','Simple floating movement'),
+      ]),
+      T('UProjectileMovementComponent','comp','Homing/ballistic projectile'),
+      T('UInterpToMovementComponent','comp','Point-to-point interpolation'),
+      T('URotatingMovementComponent','comp','Constant rotation'),
+    ]),
+
+    T('UNavMovementComponent','ai','Navigation-aware movement base'),
+    T('UPathFollowingComponent','ai','Path following along navmesh'),
+    T('UAIPerceptionComponent','ai','AI sensory system (sight, hearing, etc.)','AIModule'),
+    T('UInputComponent','comp','Input binding host'),
+    T('UTimelineComponent','comp','Curve-driven BP timeline'),
+    T('UNavigationInvokerComponent','ai','Dynamic navmesh generation trigger'),
+    T('UAbilitySystemComponent','comp','GAS: abilities, attributes, effects','GameplayAbilities'),
+    T('UGameFrameworkComponentManager','comp','Modular gameplay init','ModularGameplay'),
+  ]),
+
+  T('USubsystem','sub','Lifecycle-managed singletons (no world presence)',null,[
+    T('UEngineSubsystem','sub','Lives with GEngine'),
+    T('UEditorSubsystem','sub','Lives with GEditor'),
+    T('UGameInstanceSubsystem','sub','Lives with UGameInstance'),
+    T('UWorldSubsystem','sub','Lives with UWorld',null,[
+      T('UTickableWorldSubsystem','sub','+ receives Tick()'),
+    ]),
+    T('ULocalPlayerSubsystem','sub','Lives with ULocalPlayer'),
+    T('UAudioEngineSubsystem','sub','Audio engine extension'),
+  ]),
+
+  T('UGameInstance','data','Persists across level transitions, session-wide state'),
+
+  T('UAnimInstance','anim','Animation blueprint base class',null,[
+    T('UAnimInstanceProxy','anim','Thread-safe anim worker'),
+  ]),
+
+  T('UAnimNotify','anim','Single-frame anim event'),
+  T('UAnimNotifyState','anim','Duration-based anim event'),
+
+  T('UUserWidget','ui','UMG widget blueprint base',null,[
+    T('UCommonActivatableWidget','ui','Activatable widget with input routing','CommonUI'),
+    T('UCommonButtonBase','ui','Cross-platform button','CommonUI'),
+    T('UEditorUtilityWidget','ui','Editor-only Blutility widget','EditorScripting'),
+  ]),
+
+  T('UBlueprintFunctionLibrary','data','Static functions exposed to BP (no state)',null,[
+    T('UGameplayStatics','data','Spawn, sound, particle, damage, line trace utilities'),
+    T('UKismetMathLibrary','data','Math operations'),
+    T('UKismetSystemLibrary','data','System: print, delay, timer, draw debug'),
+    T('UKismetStringLibrary','data','String operations'),
+    T('UKismetArrayLibrary','data','Array operations'),
+    T('UHeadMountedDisplayFunctionLibrary','data','VR HMD utilities','HeadMountedDisplay'),
+    T('UAbilitySystemBlueprintLibrary','data','GAS BP helpers','GameplayAbilities'),
+  ]),
+
+  T('UDataAsset','data','Serialized data-only asset',null,[
+    T('UPrimaryDataAsset','data','+ AssetManager ID for async loading'),
+    T('UInputAction','data','Enhanced Input action definition','EnhancedInput'),
+    T('UInputMappingContext','data','Enhanced Input key mapping set','EnhancedInput'),
+  ]),
+
+  T('UDataTable','data','Tabular CSV/JSON data (rows = FTableRowBase structs)'),
+  T('UCurveBase','data','Curve data base',null,[
+    T('UCurveFloat','data','Float curve'),
+    T('UCurveVector','data','Vector curve'),
+    T('UCurveLinearColor','data','Color curve'),
+  ]),
+
+  T('USaveGame','data','Save/load serialization container'),
+  T('UDeveloperSettings','data','Auto-registered Project Settings section'),
+  T('UCheatManager','data','Debug cheat console commands'),
+  T('UAssetManager','data','Async asset loading & management'),
+
+  T('UInterface','root','Blueprint-implementable interface (UINTERFACE)'),
+
+  T('UGameplayAbility','ai','GAS: individual ability implementation','GameplayAbilities'),
+  T('UAttributeSet','ai','GAS: attribute definitions (health, mana, etc.)','GameplayAbilities'),
+  T('UGameplayEffect','ai','GAS: stat modifications / buffs / debuffs','GameplayAbilities'),
+  T('UGameplayTask','ai','Async gameplay task base','GameplayTasks',null,[
+    T('UAbilityTask','ai','GAS ability-specific async task','GameplayAbilities'),
+  ]),
+
+  T('UBTTaskNode','ai','Behavior tree: task (leaf action)',null,[
+    T('UBTTask_BlackboardBase','ai','+ blackboard key access'),
+    T('UBTTask_MoveTo','ai','Pathfind to blackboard target'),
+    T('UBTTask_Wait','ai','Wait N seconds'),
+    T('UBTTask_PlayAnimation','ai','Play anim montage'),
+    T('UBTTask_RunEQSQuery','ai','Run EQS query'),
+    T('UBTTask_GameplayTaskBase','ai','Wrap a gameplay task'),
+  ]),
+  T('UBTDecorator','ai','Behavior tree: conditional decorator',null,[
+    T('UBTDecorator_BlackboardBase','ai','Conditional on blackboard key',null,[
+      T('UBTDecorator_Blackboard','ai','Compare blackboard values'),
+    ]),
+    T('UBTDecorator_IsAtLocation','ai','Distance check'),
+    T('UBTDecorator_ConeCheck','ai','Cone angle check'),
+    T('UBTDecorator_Cooldown','ai','Time-based cooldown'),
+    T('UBTDecorator_TimeLimit','ai','Max execution time'),
+    T('UBTDecorator_Loop','ai','Repeat N times'),
+  ]),
+  T('UBTService','ai','Behavior tree: periodic background service',null,[
+    T('UBTService_BlackboardBase','ai','Update blackboard periodically',null,[
+      T('UBTService_DefaultFocus','ai','Set focus target'),
+    ]),
+    T('UBTService_RunEQS','ai','Periodic EQS query'),
+  ]),
+  T('UBTCompositeNode','ai','BT composite base (selector, sequence)'),
+
+  T('UEnvQueryGenerator','ai','EQS: generate test points',null,[
+    T('UEnvQueryGenerator_OnCircle','ai','Points on a circle'),
+    T('UEnvQueryGenerator_SimpleGrid','ai','Points on a grid'),
+    T('UEnvQueryGenerator_PathingGrid','ai','Navmesh-reachable grid'),
+    T('UEnvQueryGenerator_Cone','ai','Points in a cone'),
+  ]),
+  T('UEnvQueryTest','ai','EQS: score/filter generated points',null,[
+    T('UEnvQueryTest_Distance','ai','Score by distance'),
+    T('UEnvQueryTest_Trace','ai','Visibility ray trace'),
+    T('UEnvQueryTest_Pathfinding','ai','Navmesh path cost'),
+    T('UEnvQueryTest_Dot','ai','Dot product angle'),
+  ]),
+  T('UEnvQueryContext','ai','EQS: define a query context'),
+
+  T('UNavArea','ai','Navigation area cost class',null,[
+    T('UNavArea_Obstacle','ai','Unwalkable area'),
+    T('UNavArea_Default','ai','Default walkable area'),
+  ]),
+
+  T('UInputModifier','data','Enhanced Input: modify input value','EnhancedInput'),
+  T('UInputTrigger','data','Enhanced Input: trigger conditions','EnhancedInput'),
+  T('UPlayerInput','data','Legacy input processing'),
+
+  T('USoundBase','data','Sound asset base',null,[
+    T('USoundWave','data','Raw audio data'),
+    T('USoundCue','data','Node-based sound graph'),
+    T('UMetaSoundSource','data','MetaSounds source','MetaSounds'),
+  ]),
+
+  T('UTexture','data','Texture asset base',null,[
+    T('UTexture2D','data','2D texture'),
+    T('UTextureRenderTarget2D','data','Render target'),
+    T('UMediaTexture','data','Media playback texture','MediaFramework'),
+  ]),
+
+  T('UMaterialExpression','data','Material graph node base'),
+  T('UMaterialInterface','data','Material reference base',null,[
+    T('UMaterial','data','Material asset'),
+    T('UMaterialInstance','data','Material parameter override'),
+  ]),
+
+  T('UOnlineSession','net','Online session management'),
+  T('UNetDriver','net','Network driver base'),
+  T('UNetConnection','net','Single network connection'),
+
+  T('UPhysicalMaterial','phys','Surface physics properties (friction, restitution)'),
+  T('UFieldSystemComponent','phys','Chaos field forces','ChaosDestruction'),
+
+  T('UMovieSceneSequence','data','Sequencer sequence base',null,[
+    T('ULevelSequence','data','Level Sequencer cinematics'),
+    T('UTemplateSequence','data','Reusable sequence template'),
+  ]),
+
+  T('UForceFeedbackEffect','data','Gamepad vibration pattern'),
+  T('UCameraShakeBase','data','Camera shake base',null,[
+    T('UMatineeCameraShake','data','Wave-based camera shake'),
+  ]),
+  T('UCameraModifier','data','Camera post-process modifier'),
+
+  T('ULevelStreamingDynamic','data','Runtime level streaming'),
+  T('ULocalPlayer','data','Local player viewport slot'),
+]);
+
+let totalCount = 0;
+let activeFilters = new Set(Object.keys(CATS));
+
+function countNodes(node) {
+  let c = 1;
+  for (const ch of node.ch) c += countNodes(ch);
+  return c;
+}
+totalCount = countNodes(tree);
+
+function renderFilters() {
+  const el = document.getElementById('filters');
+  el.innerHTML = Object.entries(CATS).map(([k,v]) =>
+    `<span class="pill cat-${v.color} active" data-cat="${k}" onclick="toggleFilter('${k}',this)">${v.label}</span>`
+  ).join('');
+}
+
+function toggleFilter(cat, pill) {
+  if (activeFilters.has(cat)) { activeFilters.delete(cat); pill.classList.remove('active'); }
+  else { activeFilters.add(cat); pill.classList.add('active'); }
+  applyFilters();
+}
+
+function renderTree(node, depth) {
+  const hasChildren = node.ch.length > 0;
+  const open = depth < 1;
+  let html = `<li data-cat="${node.cat}" data-name="${node.n.toLowerCase()}">`;
+  html += `<div class="node-row cat-${CATS[node.cat].color} ${hasChildren?'expandable':''}" ${hasChildren?'onclick="togNode(this)"':''}>`;
+  html += `<span class="caret ${hasChildren?(open?'open':''):'hidden'}"></span>`;
+  html += `<span class="cls-name">${node.n}</span>`;
+  html += `<span class="tag">${CATS[node.cat].label}</span>`;
+  if (node.plug) html += `<span class="plugin-badge">${node.plug}</span>`;
+  html += `<span class="desc">${node.d}</span>`;
+  html += '</div>';
+  if (hasChildren) {
+    html += `<ul style="${open?'':'display:none'}">`;
+    for (const ch of node.ch) html += renderTree(ch, depth+1);
+    html += '</ul>';
+  }
+  html += '</li>';
+  return html;
+}
+
+function togNode(row) {
+  const li = row.parentElement;
+  const ul = li.querySelector(':scope > ul');
+  const caret = row.querySelector('.caret');
+  if (!ul) return;
+  const open = ul.style.display !== 'none';
+  ul.style.display = open ? 'none' : '';
+  caret.classList.toggle('open', !open);
+}
+
+function toggleAll(open) {
+  document.querySelectorAll('.tree .expandable').forEach(row => {
+    const ul = row.parentElement.querySelector(':scope > ul');
+    const caret = row.querySelector('.caret');
+    if (ul) { ul.style.display = open ? '' : 'none'; caret.classList.toggle('open', open); }
+  });
+}
+
+function applyFilters() {
+  document.querySelectorAll('.tree li[data-cat]').forEach(li => {
+    li.classList.toggle('hidden-by-filter', !activeFilters.has(li.dataset.cat));
+  });
+  updateCounter();
+}
+
+function applySearch(query) {
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('.tree li[data-name]').forEach(li => {
+    if (!q) { li.classList.remove('hidden-by-search'); li.querySelector('.cls-name')?.classList.remove('highlight'); return; }
+    const match = li.dataset.name.includes(q);
+    li.classList.toggle('hidden-by-search', !match);
+    li.querySelector('.cls-name')?.classList.toggle('highlight', match);
+    if (match) {
+      let parent = li.parentElement?.closest('li');
+      while (parent) {
+        parent.classList.remove('hidden-by-search');
+        const ul = parent.querySelector(':scope > ul');
+        const caret = parent.querySelector('.caret');
+        if (ul) { ul.style.display = ''; caret?.classList.add('open'); }
+        parent = parent.parentElement?.closest('li');
+      }
+    }
+  });
+  updateCounter();
+}
+
+function updateCounter() {
+  const visible = document.querySelectorAll('.tree li[data-cat]:not(.hidden-by-filter):not(.hidden-by-search)').length;
+  document.getElementById('counter').textContent = `${visible} / ${totalCount} classes`;
+}
+
+renderFilters();
+document.getElementById('tree').innerHTML = '<ul>' + renderTree(tree, 0) + '</ul>';
+updateCounter();
+
+let searchTimeout;
+document.getElementById('search').addEventListener('input', e => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => applySearch(e.target.value), 150);
+});
+</script>
+</body>
+</html>
